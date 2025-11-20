@@ -1,70 +1,51 @@
-
 package com.example.skill_bridge.config;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Component;
-
-import jakarta.annotation.PostConstruct;
-import java.security.Key;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtTokenProvider {
 
-    private final Dotenv dotenv;
-
+    @Value("${jwt.secret}")
     private String secret;
-    private long expirationMs;
-    private Key key;
 
-    public JwtTokenProvider(Dotenv dotenv) {
-        this.dotenv = dotenv;
-    }
+    @Value("${jwt.expiration}")
+    private long expiration;
 
-    @PostConstruct
-    public void init() {
-
-        this.secret = dotenv.get("JWT_SECRET");
-        if (secret == null || secret.length() < 32) {
-            throw new IllegalStateException("JWT_SECRET deve existir no .env e ter pelo menos 32 caracteres!");
-        }
-
-        String expString = dotenv.get("JWT_EXPIRATION_MS", "3600000");
-        this.expirationMs = Long.parseLong(expString);
-
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-    }
-
-    public String generateToken(String subject) {
+    public String generateToken(String username) {
         Date now = new Date();
-        Date exp = new Date(now.getTime() + expirationMs);
+        Date expiry = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
-                .setSubject(subject)
+                .setSubject(username)
                 .setIssuedAt(now)
-                .setExpiration(exp)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setExpiration(expiry)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
     public boolean validate(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
+        } catch (Exception e) {
             return false;
         }
     }
 
     public String getSubject(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret)
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+        return claims.getSubject();
     }
 }
