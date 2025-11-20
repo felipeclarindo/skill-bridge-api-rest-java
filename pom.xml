@@ -8,29 +8,49 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.5.7</version>
+    <version>3.2.5</version>
+    <relativePath />
   </parent>
   <groupId>com.example</groupId>
   <artifactId>skill-bridge</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>skill-bridge</name>
+  <description>Skill Bridge Project</description>
   <properties>
     <java.version>21</java.version>
+    <spring-ai.version>1.0.0-M1</spring-ai.version>
+    <jjwt.version>0.11.5</jjwt.version>
   </properties>
-  <!-- BOM DO SPRING AI -->
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>spring-snapshots</id>
+      <name>Spring Snapshots</name>
+      <url>https://repo.spring.io/snapshot</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-bom</artifactId>
-        <version>1.0.0</version>
+        <version>${spring-ai.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
-    <!-- SPRING CORE -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -39,7 +59,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
-    <!-- JPA + H2 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -49,30 +68,27 @@
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!-- SECURITY -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
-    <!-- JWT -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
-    <!-- CACHING -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-cache</artifactId>
@@ -81,53 +97,32 @@
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
     </dependency>
-    <!-- REDIS -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-redis</artifactId>
     </dependency>
-    <!-- RabbitMQ -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-amqp</artifactId>
     </dependency>
-    <!-- ACTUATOR -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
-    <!-- SWAGGER -->
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>2.5.0</version>
     </dependency>
-    <!-- Spring AI (CORRETO) -->
     <dependency>
       <groupId>org.springframework.ai</groupId>
-      <artifactId>spring-ai-openai</artifactId>
+      <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.ai</groupId>
-      <artifactId>spring-ai-spring-boot-starter</artifactId>
-    </dependency>
-    <!-- WebFlux (necessário para WebClient) -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
-    </dependency>
-    <!-- ENVIRONMENT (.env) -->
     <dependency>
       <groupId>me.paulschwarz</groupId>
       <artifactId>spring-dotenv</artifactId>
       <version>3.0.0</version>
     </dependency>
-    <dependency>
-      <groupId>io.github.cdimascio</groupId>
-      <artifactId>java-dotenv</artifactId>
-      <version>5.2.2</version>
-    </dependency>
-    <!-- TESTES -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
