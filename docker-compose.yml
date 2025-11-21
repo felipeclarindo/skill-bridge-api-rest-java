@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  # Serviço da sua Aplicação Java
+  app:
+    build: .
+    container_name: skill-bridge-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+    environment:
+      # Diz ao Spring para conectar no container 'rabbitmq'
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+
+  # Serviço do RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: skill-bridge-rabbitmq
+    ports:
+      - "5672:5672" # Porta de comunicação padrão (usada pelo Java)
+      - "15672:15672" # Porta do Painel de Controle Web
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
